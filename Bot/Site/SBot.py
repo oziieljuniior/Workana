@@ -3,6 +3,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
 import json
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
+)
+from database import salvar_projeto
+
 
 # Configuração do navegador
 options = Options()
@@ -38,13 +48,9 @@ for job in jobs:
     except:
         pass
 
-# Mostrar resultados
-for d in dados:
-    print(d)
 # Abrir cada projeto
 for link in dados:
-
-    driver.get(link)
+    driver.get(link['link'])
     time.sleep(3)
 
     try:
@@ -57,11 +63,11 @@ for link in dados:
     except:
         descricao = ""
 
-    projetos.append({
-        "titulo": titulo,
-        "link": link,
-        "descricao": descricao
-    })
+    salvar_projeto(
+        link['titulo'],
+        link['link'],
+        descricao
+    )
 
 # salvar
 with open("projetos.json", "w") as f:
@@ -69,4 +75,3 @@ with open("projetos.json", "w") as f:
 
 driver.quit()
 
-driver.quit()
