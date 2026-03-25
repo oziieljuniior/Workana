@@ -2,10 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import time
+import json
 
 # Configuração do navegador
 options = Options()
 options.add_argument("--start-maximized")
+options.add_argument("--user-data-dir=workana_profile")
 
 driver = webdriver.Chrome(options=options)
 
@@ -39,5 +41,32 @@ for job in jobs:
 # Mostrar resultados
 for d in dados:
     print(d)
+# Abrir cada projeto
+for link in dados:
+
+    driver.get(link)
+    time.sleep(3)
+
+    try:
+        titulo = driver.find_element(By.TAG_NAME, "h1").text
+    except:
+        titulo = ""
+
+    try:
+        descricao = driver.find_element(By.TAG_NAME, "body").text
+    except:
+        descricao = ""
+
+    projetos.append({
+        "titulo": titulo,
+        "link": link,
+        "descricao": descricao
+    })
+
+# salvar
+with open("projetos.json", "w") as f:
+    json.dump(projetos, f, indent=4)
+
+driver.quit()
 
 driver.quit()
