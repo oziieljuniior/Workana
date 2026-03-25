@@ -174,6 +174,7 @@ def listar_projetos():
 
     return projetos
 
+import os
 
 def projeto_existe(hash_id):
 
@@ -193,25 +194,4 @@ def projeto_existe(hash_id):
     conn.close()
 
     return resultado is not None
-
-
-def get_clientes_ativos():
-
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-    db_path = os.path.join(base_dir, "data", "workana.db")
-
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        SELECT id, nome, email
-        FROM clientes
-        WHERE ativo = 1
-    """)
-
-    clientes = cursor.fetchall()
-
-    conn.close()
-
-    return clientes
 
