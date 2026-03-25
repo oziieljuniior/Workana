@@ -1,23 +1,43 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+import time
 
+# Configuração do navegador
+options = Options()
+options.add_argument("--start-maximized")
 
-#Abrir navegador
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver = webdriver.Chrome(options=options)
 
-#Abrir site
-driver.get("https://www.workana.com")
+url = "https://www.workana.com/jobs?category=it-programming&language=xx&subcategory=data-science-1%2Cartificial-intelligence-1"
+driver.get(url)
 
-title = driver.title
-print(title)
+time.sleep(5)
 
+# Scroll para carregar mais projetos
+for _ in range(5):
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(3)
 
+# Buscar projetos
+jobs = driver.find_elements(By.CSS_SELECTOR, "a[href*='/job/']")
 
-#Aguardar o carregamento da página
-driver.implicitly_wait(10)
+dados = []
 
+for job in jobs:
+    try:
+        titulo = job.text
+        link = job.get_attribute("href")
+
+        dados.append({
+            "titulo": titulo,
+            "link": link
+        })
+    except:
+        pass
+
+# Mostrar resultados
+for d in dados:
+    print(d)
 
 driver.quit()
-
