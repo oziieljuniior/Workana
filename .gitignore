@@ -21,6 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+Bot/Site/workana_profile/
 
 # Virtual environments
 .env
