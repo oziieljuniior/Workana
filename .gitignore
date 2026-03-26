@@ -22,6 +22,7 @@ var/
 .installed.cfg
 *.egg
 Bot/workana_profile/
+Bot/Site/workana_profile/
 data/workana.db
 
 # Virtual environments
