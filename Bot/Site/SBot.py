@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 import sys
 import os
@@ -19,7 +21,10 @@ options = Options()
 options.add_argument("--start-maximized")
 options.add_argument("--user-data-dir=workana_profile")
 
-driver = webdriver.Chrome(options=options)
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager().install()),
+    options=options
+)
 
 url = "https://www.workana.com/jobs?category=it-programming&language=xx&subcategory=data-science-1%2Cartificial-intelligence-1"
 driver.get(url)
