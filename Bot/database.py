@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 
 # Caminho do banco
+# /home/darkcover/Documentos/Workana/data/workana.db
 DB_PATH = Path("/home/darkcover/Documentos/Workana/data/workana.db")
 
 
@@ -173,8 +174,6 @@ def listar_projetos():
     conn.close()
 
     return projetos
-
-import os
 
 def projeto_existe(hash_id):
 

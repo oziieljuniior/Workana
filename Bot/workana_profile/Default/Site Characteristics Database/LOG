@@ -1,3 +1,2 @@
-2026/03/25-16:54:09.791 fcdc Reusing MANIFEST /home/darkcover/Documentos/Workana/Bot/workana_profile/Default/Site Characteristics Database/MANIFEST-000001
-2026/03/25-16:54:09.792 fcdc Recovering log #3
-2026/03/25-16:54:09.792 fcdc Reusing old log /home/darkcover/Documentos/Workana/Bot/workana_profile/Default/Site Characteristics Database/000003.log 
+2026/03/25-21:03:57.304 1cd56 Creating DB /home/darkcover/Documentos/Workana/Bot/workana_profile/Default/Site Characteristics Database since it was missing.
+2026/03/25-21:03:57.317 1cd56 Reusing MANIFEST /home/darkcover/Documentos/Workana/Bot/workana_profile/Default/Site Characteristics Database/MANIFEST-000001
