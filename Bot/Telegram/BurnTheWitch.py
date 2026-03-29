@@ -83,7 +83,7 @@ async def pipeline(context: ContextTypes.DEFAULT_TYPE):
     df = pd.read_sql("""
         SELECT *
         FROM projetos_filtrados
-        WHERE enviado_telegram = 1
+        WHERE enviado_telegram = 0
     """, conn)
 
     for _, row in df.iterrows():
@@ -109,7 +109,7 @@ async def pipeline(context: ContextTypes.DEFAULT_TYPE):
 
         conn.execute("""
             UPDATE projetos_filtrados
-            SET enviado_telegram = 0
+            SET enviado_telegram = 1
             WHERE hash_id = ?
         """, (hash_id,))
 
