@@ -14,7 +14,7 @@ sys.path.append(
     )
 )
 
-from database import salvar_projeto, criar_banco, projeto_existe
+from data.database import salvar_projeto, criar_banco, projeto_existe
 
 # Configuração do navegador
 options = Options()

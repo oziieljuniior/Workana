@@ -1,10 +1,11 @@
 import sqlite3
 import os
 from pathlib import Path
+import dotenv
 
 # Caminho do banco
-# /home/darkcover/Documentos/Workana/data/workana.db
-DB_PATH = Path("/home/darkcover/Documentos/Workana/data/workana.db")
+dotenv.load_dotenv()
+DB_PATH = Path(os.getenv("DATABASE_PATH"))
 
 
 def criar_banco():
@@ -82,105 +83,9 @@ def salvar_projeto(
     conn.close()
 
 
-# Buscar projetos não enviados ao Telegram
-def buscar_projetos_nao_enviados():
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT 
-        id,
-        titulo,
-        link,
-        descricao,
-        cliente_verificado,
-        cliente_pagamento_verificado,
-        cliente_historico,
-        enviar_proposta
-    FROM projetos
-    WHERE enviado_telegram = 0
-    ORDER BY data_coleta DESC
-    """)
-
-    projetos = cursor.fetchall()
-
-    conn.close()
-
-    return projetos
-
-
-# Buscar projetos para enviar proposta
-def buscar_projetos_para_proposta():
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    SELECT *
-    FROM projetos
-    WHERE enviar_proposta = 1
-    """)
-
-    projetos = cursor.fetchall()
-
-    conn.close()
-
-    return projetos
-
-
-# Marcar como enviado no Telegram
-def marcar_como_enviado(projeto_id):
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE projetos
-    SET enviado_telegram = 1
-    WHERE id = ?
-    """, (projeto_id,))
-
-    conn.commit()
-    conn.close()
-
-
-# Marcar para enviar proposta
-def marcar_para_proposta(projeto_id):
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("""
-    UPDATE projetos
-    SET enviar_proposta = 1
-    WHERE id = ?
-    """, (projeto_id,))
-
-    conn.commit()
-    conn.close()
-
-
-# Listar todos projetos
-def listar_projetos():
-
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM projetos")
-
-    projetos = cursor.fetchall()
-
-    conn.close()
-
-    return projetos
-
 def projeto_existe(hash_id):
 
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-    db_path = os.path.join(base_dir, "data", "workana.db")
-
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute(
