@@ -14,6 +14,7 @@ import pandas as pd
 import time
 import subprocess
 import sys
+import asyncio
 
 sys.path.append(
     os.path.abspath(
@@ -101,11 +102,14 @@ async def pipeline(context: ContextTypes.DEFAULT_TYPE):
 🔗 {link}
 
 """
-
+    
         await context.bot.send_message(
             chat_id=ALLOWED_GROUP_ID,
             text=message
         )
+
+        # Delay anti flood
+        await asyncio.sleep(30)
 
         conn.execute("""
             UPDATE projetos_filtrados
