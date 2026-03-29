@@ -24,6 +24,7 @@ var/
 data/workana.db
 data/*.db
 workana_profile/
+Bot/workana_profile/
 
 # Virtual environments
 .env
