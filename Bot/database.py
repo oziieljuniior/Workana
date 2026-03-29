@@ -193,4 +193,3 @@ def projeto_existe(hash_id):
     conn.close()
 
     return resultado is not None
-
