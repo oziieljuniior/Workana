@@ -6,5 +6,7 @@ while True:
 
     subprocess.run(["python3", "/home/darkcover/Documentos/Workana/Bot/Site/SBot.py"])
 
+    subprocess.run(["python3", "/home/darkcover/Documentos/Workana/Bot/Site/version0_1/SBot_0_1.py"])
+
     print("Aguardando 30 minutos...")
     time.sleep(1800)  # 30 minutos = 1800 segundos

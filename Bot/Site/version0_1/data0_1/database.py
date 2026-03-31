@@ -3,13 +3,13 @@ import os
 from pathlib import Path
 import dotenv
 
-# Caminho do banco
+# Carrega as variáveis de ambiente
 dotenv.load_dotenv()
 DB_PATH = Path(os.getenv("DATABASE_PATH_0_1"))
 
-
 def criar_banco():
-
+    """Cria a tabela se ela não existir. 
+    Se você mudou a estrutura (adicionou colunas), apague o arquivo .db manualmete uma vez."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -46,11 +46,14 @@ def salvar_projeto(
     enviar_proposta=False,
     telegram_enviado=False
 ):
-
+    """Insere os dados no banco. 
+    Note que a quantidade de '?' deve ser EXATAMENTE igual à quantidade de colunas e valores."""
+    
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     try:
+        # 10 colunas listadas = 10 interrogações (?)
         cursor.execute("""
         INSERT OR IGNORE INTO projetos 
         (
@@ -65,7 +68,7 @@ def salvar_projeto(
             enviar_proposta,
             enviado_telegram
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             hash_id,
             categoria,
@@ -82,13 +85,14 @@ def salvar_projeto(
         conn.commit()
 
     except Exception as e:
-        print("Erro ao salvar projeto:", e)
+        print(f"Erro ao salvar projeto: {e}")
 
-    conn.close()
+    finally:
+        conn.close()
 
 
 def projeto_existe(hash_id):
-
+    """Verifica se o hash já está no banco para evitar duplicatas."""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
@@ -98,7 +102,6 @@ def projeto_existe(hash_id):
     )
 
     resultado = cursor.fetchone()
-
     conn.close()
 
     return resultado is not None

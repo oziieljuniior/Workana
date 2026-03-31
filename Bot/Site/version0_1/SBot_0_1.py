@@ -30,11 +30,12 @@ driver = webdriver.Chrome(
 
 dotenv.load_dotenv()
 PATH_LINKS = os.getenv("CATEGORIES_PATH")
-data = pd.read_csv(PATH_LINKS)
+data = pd.read_csv(PATH_LINKS, sep=";")
 dados = []
 for i in range(len(data)):
+    #print(f"Processando categoria: {data.columns}")
     categoria = data.loc[i, "Nome"]
-    link = data.loc[i, "link"]
+    link = data.loc[i, "Link"]
 
     driver.get(link)
     jobs = driver.find_elements(By.CSS_SELECTOR, "a[href*='/job/']")
