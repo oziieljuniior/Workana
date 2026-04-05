@@ -22,6 +22,7 @@ sys.path.append(
     )
 )
 from databaseFiltrado import atualizar_projetos_filtrados
+import ollama
 
 
 
@@ -38,6 +39,7 @@ TOKEN = os.getenv("TELEGRAM_TOKEN_0_1")
 # Converta para int, pois IDs do Telegram são numéricos
 ALLOWED_GROUP_ID = int(os.getenv("GROUP_ID", 0)) 
 DATABASE_PATH = Path(os.getenv("DATABASE_PATH_0_1"))
+CONTEXT_PATH = os.getenv("CONTEXT_PATH")
 
 # --- FUNÇÕES DE LÓGICA ---
 ## Consulta e processamento de dados
@@ -71,6 +73,42 @@ def listar_titulos(df):
         list: Lista de títulos dos projetos.
     """
     return df['titulo'].tolist()
+
+def limpar_descricao(texto):
+    # O conteúdo real geralmente começa após "Sobre este projeto" 
+    # e termina antes de "Categoria"
+    try:
+        inicio = texto.split("Sobre este projeto")[1]
+        fim = inicio.split("Freelancers interessados")[0]
+        return fim.strip()
+    except:
+        return texto # Caso não encontre o padrão, mantém o original
+
+def gerar_proposta_personalizada(titulo_vaga, descricao_vaga):
+    # 1. Carrega o template do seu arquivo .txt
+    with open(CONTEXT_PATH, 'r', encoding='utf-8') as f:
+        template = f.read()
+
+    # 2. Substitui as variáveis do template pelos dados da vaga
+    prompt_final = template.replace('{{titulo}}', titulo_vaga)
+    prompt_final = prompt_final.replace('{{descricao}}', descricao_vaga)
+
+    # 3. Chama o Ollama (usando o modelo leve para economizar RAM)
+    try:
+        response = ollama.chat(
+            model='tinyllama', # Ou 'qwen2:0.5b' para ser ainda mais rápido
+            messages=[
+                {'role': 'user', 'content': prompt_final}
+            ],
+            options={
+                "num_thread": 4, # Aproveita os 4 threads do seu i3
+                "temperature": 0.4 # Menor temperatura = resposta mais profissional e direta
+            }
+        )
+        return response['message']['content']
+    except Exception as e:
+        return f"Erro no processamento: {e}"
+
 
 ## TELEGRAM BOT
 async def pipeline(context: ContextTypes.DEFAULT_TYPE):
@@ -118,6 +156,27 @@ async def pipeline(context: ContextTypes.DEFAULT_TYPE):
             SET enviado_telegram = 1
             WHERE hash_id = ?
         """, (hash_id,))
+
+        Descricao = limpar_descricao(row['descricao'])
+        print(Descricao)
+
+        proposta = gerar_proposta_personalizada(titulo, Descricao)
+        print(proposta)
+
+        message = f"""
+🤖 Proposta Gerada para: {titulo}
+
+{proposta}
+
+"""
+        await context.bot.send_message(
+            chat_id=ALLOWED_GROUP_ID,
+            text=message
+        )
+
+        # Delay anti flood
+        await asyncio.sleep(30)
+
 
     conn.commit()
     conn.close()

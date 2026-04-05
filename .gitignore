@@ -27,6 +27,7 @@ workana_profile/
 Bot/workana_profile/
 Documentos/Propostas/
 Bot/Site/version0_1/lista.csv
+prompts/*
 
 # Virtual environments
 .env
