@@ -30,7 +30,7 @@ driver = webdriver.Chrome(
 
 dotenv.load_dotenv()
 PATH_LINKS = os.getenv("CATEGORIES_PATH")
-data = pd.read_csv(PATH_LINKS, sep=";")
+data = pd.read_csv(PATH_LINKS, sep=",")
 dados = []
 for i in range(len(data)):
     #print(f"Processando categoria: {data.columns}")
